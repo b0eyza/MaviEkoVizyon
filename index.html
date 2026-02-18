@@ -3,69 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SeaYield | Blue Eco Vision Intelligence</title>
-    <link rel="stylesheet" href="style.css">
+    <title>SeaYield | Blue Eco Vision</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #000000;
+            --card-bg: rgba(28, 28, 30, 0.7);
+            --primary: #0071e3;
+            --text: #f5f5f7;
+            --accent: #64ffda;
+        }
+
+        body {
+            margin: 0; background-color: var(--bg); color: var(--text);
+            font-family: 'Inter', -apple-system, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Apple Style Glassmorphism Navbar */
+        nav {
+            position: fixed; top: 0; width: 100%; height: 44px;
+            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            border-bottom: 0.5px solid rgba(255,255,255,0.1);
+        }
+
+        nav a { color: var(--text); text-decoration: none; margin: 0 20px; font-size: 12px; font-weight: 300; letter-spacing: 0.5px; opacity: 0.8; transition: 0.3s; }
+        nav a:hover { opacity: 1; color: var(--primary); }
+
+        /* Hero Section - Minimalist & Bold */
+        .hero {
+            height: 90vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            background: radial-gradient(circle at center, #1d1d1f 0%, #000000 100%);
+        }
+
+        .hero h1 { font-size: 56px; font-weight: 700; margin-bottom: 10px; letter-spacing: -1.2px; }
+        .hero p { font-size: 24px; font-weight: 400; color: #86868b; max-width: 600px; }
+
+        /* Dashboard Section */
+        .container { max-width: 1100px; margin: 0 auto; padding: 100px 20px; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 50px; }
+
+        .glass-card {
+            background: var(--card-bg); backdrop-filter: blur(30px);
+            border-radius: 22px; padding: 40px; border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover { transform: scale(1.02); border-color: var(--primary); }
+
+        .btn-apple {
+            background: var(--primary); color: white; border: none;
+            padding: 12px 24px; border-radius: 980px; font-size: 17px;
+            font-weight: 400; cursor: pointer; transition: 0.3s;
+        }
+
+        .btn-apple:hover { background: #0077ed; box-shadow: 0 0 20px rgba(0,113,227,0.3); }
+
+        .stat-val { font-size: 48px; font-weight: 600; color: var(--accent); }
+
+        input, select {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px; border-radius: 12px; color: white; margin: 10px 0 20px 0;
+        }
+    </style>
 </head>
-<body class="dark-mode">
-    <nav class="navbar glass">
-        <div class="logo">SEAYIELD<span>.</span></div>
-        <ul class="nav-links">
-            <li><a href="#hero">Ana Sayfa</a></li>
-            <li><a href="#about">Vizyon</a></li>
-            <li><a href="#dashboard">Dashboard</a></li>
-            <li><a href="#contact">İletişim</a></li>
-        </ul>
-        <button id="theme-toggle" class="btn-icon">🌓</button>
+<body>
+    <nav>
+        <a href="#">Mavi Eko Vizyon</a>
+        <a href="#">SeaYield</a>
+        <a href="#">Analiz</a>
+        <a href="#">İletişim</a>
     </nav>
 
-    <section id="hero" class="hero-section">
-        <div class="hero-content fade-in">
-            <h1>Okyanusun Geleceğini <br><span class="gradient-text">Veriyle Yönetin.</span></h1>
-            <p>Yapay zeka destekli akustik besleme ve karbon kredi optimizasyonu ile sürdürülebilir su ürünleri mühendisliği.</p>
-            <div class="cta-group">
-                <a href="#dashboard" class="btn-primary">Analize Başla</a>
-                <a href="#about" class="btn-secondary">Raporu Oku</a>
-            </div>
-        </div>
-    </section>
+    <div class="hero">
+        <h1>SeaYield.</h1>
+        <p>Okyanusun geleceğini <br>verilerle yeniden inşa ediyoruz.</p>
+    </div>
 
-    <section id="dashboard" class="dashboard glass container fade-in">
-        <h2>Global Analiz Merkezi</h2>
-        <div class="grid-layout">
-            <div class="control-panel card glass">
-                <h3>⚙️ Parametreler</h3>
-                <div class="input-group">
-                    <label>Hedef Ülke</label>
-                    <select id="country-select" class="custom-select">
-                        <option value="">Ülke Seçiniz...</option>
-                        </select>
-                </div>
-                <div class="input-group">
-                    <label>Üretim Alanı (m²)</label>
-                    <input type="number" id="area" value="5000" class="custom-input">
-                </div>
-                <button onclick="calculateImpact()" class="btn-primary w-full">Analizi Güncelle</button>
+    <div class="container">
+        <div class="grid">
+            <div class="glass-card">
+                <h3 style="margin-top:0">Parametreler</h3>
+                <label>Bölge Seçimi</label>
+                <select id="country-select">
+                    <option>Yükleniyor...</option>
+                </select>
+                <label>Alan (m²)</label>
+                <input type="number" id="area" value="5000">
+                <button class="btn-apple" onclick="update()">Analizi Başlat</button>
             </div>
-            
-            <div class="results-panel">
-                <div class="stats-grid">
-                    <div class="stat-card card glass">
-                        <small>Karbon Kredisi (Ton/Yıl)</small>
-                        <h2 id="carbon-val">0.00</h2>
-                    </div>
-                    <div class="stat-card card glass">
-                        <small>Tahmini Gelir (€)</small>
-                        <h2 id="revenue-val">€0.00</h2>
-                    </div>
+
+            <div class="glass-card" style="display:flex; flex-direction:column; justify-content:space-around">
+                <div>
+                    <p style="color:#86868b; margin:0">Tahmini Karbon Kredisi</p>
+                    <div id="carbon-val" class="stat-val">0.00</div>
                 </div>
-                <div id="chart-container" class="card glass">
-                    <p class="placeholder-text">Sistem uydudan veri bekliyor...</p>
+                <div>
+                    <p style="color:#86868b; margin:0">Ekonomik Getiri (€)</p>
+                    <div id="revenue-val" class="stat-val">€0.00</div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-    <script src="app.js"></script>
+    <script>
+        // API'den ülkeleri çekme fonksiyonu buraya gelecek
+        async function fetchCountries() {
+            const res = await fetch('https://restcountries.com/v3.1/all');
+            const data = await res.json();
+            const select = document.getElementById('country-select');
+            select.innerHTML = '';
+            data.sort((a, b) => a.name.common.localeCompare(b.name.common)).forEach(c => {
+                let opt = document.createElement('option');
+                opt.value = c.name.common;
+                opt.textContent = c.translations.tur ? c.translations.tur.common : c.name.common;
+                select.appendChild(opt);
+            });
+        }
+        function update() {
+            const area = document.getElementById('area').value;
+            const carbon = (area * 1.25) / 1000;
+            document.getElementById('carbon-val').textContent = carbon.toFixed(2) + ' Ton';
+            document.getElementById('revenue-val').textContent = '€' + (carbon * 85).toLocaleString();
+        }
+        fetchCountries();
+    </script>
 </body>
 </html>
