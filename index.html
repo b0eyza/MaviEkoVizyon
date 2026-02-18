@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SeaYield | Blue Eco Vision Intelligence</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="dark-mode">
+    <nav class="navbar glass">
+        <div class="logo">SEAYIELD<span>.</span></div>
+        <ul class="nav-links">
+            <li><a href="#hero">Ana Sayfa</a></li>
+            <li><a href="#about">Vizyon</a></li>
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#contact">İletişim</a></li>
+        </ul>
+        <button id="theme-toggle" class="btn-icon">🌓</button>
+    </nav>
+
+    <section id="hero" class="hero-section">
+        <div class="hero-content fade-in">
+            <h1>Okyanusun Geleceğini <br><span class="gradient-text">Veriyle Yönetin.</span></h1>
+            <p>Yapay zeka destekli akustik besleme ve karbon kredi optimizasyonu ile sürdürülebilir su ürünleri mühendisliği.</p>
+            <div class="cta-group">
+                <a href="#dashboard" class="btn-primary">Analize Başla</a>
+                <a href="#about" class="btn-secondary">Raporu Oku</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard" class="dashboard glass container fade-in">
+        <h2>Global Analiz Merkezi</h2>
+        <div class="grid-layout">
+            <div class="control-panel card glass">
+                <h3>⚙️ Parametreler</h3>
+                <div class="input-group">
+                    <label>Hedef Ülke</label>
+                    <select id="country-select" class="custom-select">
+                        <option value="">Ülke Seçiniz...</option>
+                        </select>
+                </div>
+                <div class="input-group">
+                    <label>Üretim Alanı (m²)</label>
+                    <input type="number" id="area" value="5000" class="custom-input">
+                </div>
+                <button onclick="calculateImpact()" class="btn-primary w-full">Analizi Güncelle</button>
+            </div>
+            
+            <div class="results-panel">
+                <div class="stats-grid">
+                    <div class="stat-card card glass">
+                        <small>Karbon Kredisi (Ton/Yıl)</small>
+                        <h2 id="carbon-val">0.00</h2>
+                    </div>
+                    <div class="stat-card card glass">
+                        <small>Tahmini Gelir (€)</small>
+                        <h2 id="revenue-val">€0.00</h2>
+                    </div>
+                </div>
+                <div id="chart-container" class="card glass">
+                    <p class="placeholder-text">Sistem uydudan veri bekliyor...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
+</body>
+</html>
