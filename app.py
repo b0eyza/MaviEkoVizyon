@@ -31,13 +31,13 @@ r = st.slider("Büyüme katsayısı (r)", 0.05, 1.0, 0.3)
 K = st.slider("Taşıma kapasitesi (K)", 500, 5000, 1500)
 optimal_temp = st.slider("Optimum sıcaklık (°C)", 10.0, 25.0, 18.0)
 sigma = st.slider("Sıcaklık toleransı", 1.0, 10.0, 5.0)
+nutrient = st.slider("Besin seviyesi (0-1)", 0.0, 1.0, 0.6)
 
 # ---------------------------
 # Büyüme modeli
 # ---------------------------
 biomass = 100
 biomass_list = []
-nutrient = st.slider("Besin seviyesi (0-1)", 0.0, 1.0, 0.6)
 
 for temp in sst_data:
     temp_factor = np.exp(-((temp - optimal_temp) ** 2) / (2 * sigma ** 2))
