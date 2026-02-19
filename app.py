@@ -37,10 +37,11 @@ sigma = st.slider("Sıcaklık toleransı", 1.0, 10.0, 5.0)
 # ---------------------------
 biomass = 100
 biomass_list = []
+nutrient = st.slider("Besin seviyesi (0-1)", 0.0, 1.0, 0.6)
 
 for temp in sst_data:
     temp_factor = np.exp(-((temp - optimal_temp) ** 2) / (2 * sigma ** 2))
-    growth = r * biomass * (1 - biomass / K) * temp_factor
+   growth = r * biomass * (1 - biomass / K) * temp_factor * nutrient
     biomass += growth
     biomass_list.append(biomass)
 
