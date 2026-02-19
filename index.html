@@ -1,135 +1,75 @@
-<!DOCTYPE html>
-<html lang="tr">
+4<!DOCTYPE html>
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SeaYield | Blue Eco Vision</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #000000;
-            --card-bg: rgba(28, 28, 30, 0.7);
-            --primary: #0071e3;
-            --text: #f5f5f7;
-            --accent: #64ffda;
-        }
-
-        body {
-            margin: 0; background-color: var(--bg); color: var(--text);
-            font-family: 'Inter', -apple-system, sans-serif;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Apple Style Glassmorphism Navbar */
-        nav {
-            position: fixed; top: 0; width: 100%; height: 44px;
-            background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(20px);
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
-            border-bottom: 0.5px solid rgba(255,255,255,0.1);
-        }
-
-        nav a { color: var(--text); text-decoration: none; margin: 0 20px; font-size: 12px; font-weight: 300; letter-spacing: 0.5px; opacity: 0.8; transition: 0.3s; }
-        nav a:hover { opacity: 1; color: var(--primary); }
-
-        /* Hero Section - Minimalist & Bold */
-        .hero {
-            height: 90vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            background: radial-gradient(circle at center, #1d1d1f 0%, #000000 100%);
-        }
-
-        .hero h1 { font-size: 56px; font-weight: 700; margin-bottom: 10px; letter-spacing: -1.2px; }
-        .hero p { font-size: 24px; font-weight: 400; color: #86868b; max-width: 600px; }
-
-        /* Dashboard Section */
-        .container { max-width: 1100px; margin: 0 auto; padding: 100px 20px; }
-        
-        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-top: 50px; }
-
-        .glass-card {
-            background: var(--card-bg); backdrop-filter: blur(30px);
-            border-radius: 22px; padding: 40px; border: 1px solid rgba(255,255,255,0.1);
-            transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .glass-card:hover { transform: scale(1.02); border-color: var(--primary); }
-
-        .btn-apple {
-            background: var(--primary); color: white; border: none;
-            padding: 12px 24px; border-radius: 980px; font-size: 17px;
-            font-weight: 400; cursor: pointer; transition: 0.3s;
-        }
-
-        .btn-apple:hover { background: #0077ed; box-shadow: 0 0 20px rgba(0,113,227,0.3); }
-
-        .stat-val { font-size: 48px; font-weight: 600; color: var(--accent); }
-
-        input, select {
-            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2);
-            padding: 12px; border-radius: 12px; color: white; margin: 10px 0 20px 0;
-        }
-    </style>
+    <title>Ulva lactuca Büyüme Simülasyonu</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav>
-        <a href="#">Mavi Eko Vizyon</a>
-        <a href="#">SeaYield</a>
-        <a href="#">Analiz</a>
-        <a href="#">İletişim</a>
-    </nav>
 
-    <div class="hero">
-        <h1>SeaYield.</h1>
-        <p>Okyanusun geleceğini <br>verilerle yeniden inşa ediyoruz.</p>
-    </div>
+<h2>Ulva lactuca Büyüme Modeli - Çanakkale Boğazı</h2>
 
-    <div class="container">
-        <div class="grid">
-            <div class="glass-card">
-                <h3 style="margin-top:0">Parametreler</h3>
-                <label>Bölge Seçimi</label>
-                <select id="country-select">
-                    <option>Yükleniyor...</option>
-                </select>
-                <label>Alan (m²)</label>
-                <input type="number" id="area" value="5000">
-                <button class="btn-apple" onclick="update()">Analizi Başlat</button>
-            </div>
+Sıcaklık (°C): <input id="temp" type="number" value="22"><br>
+Işık (µmol/m²/s): <input id="light" type="number" value="180"><br>
+Başlangıç Biyokütle (g): <input id="bio" type="number" value="100"><br><br>
 
-            <div class="glass-card" style="display:flex; flex-direction:column; justify-content:space-around">
-                <div>
-                    <p style="color:#86868b; margin:0">Tahmini Karbon Kredisi</p>
-                    <div id="carbon-val" class="stat-val">0.00</div>
-                </div>
-                <div>
-                    <p style="color:#86868b; margin:0">Ekonomik Getiri (€)</p>
-                    <div id="revenue-val" class="stat-val">€0.00</div>
-                </div>
-            </div>
-        </div>
-    </div>
+<button onclick="simulate()">Simülasyonu Çalıştır</button>
 
-    <script>
-        // API'den ülkeleri çekme fonksiyonu buraya gelecek
-        async function fetchCountries() {
-            const res = await fetch('https://restcountries.com/v3.1/all');
-            const data = await res.json();
-            const select = document.getElementById('country-select');
-            select.innerHTML = '';
-            data.sort((a, b) => a.name.common.localeCompare(b.name.common)).forEach(c => {
-                let opt = document.createElement('option');
-                opt.value = c.name.common;
-                opt.textContent = c.translations.tur ? c.translations.tur.common : c.name.common;
-                select.appendChild(opt);
-            });
+<canvas id="chart" width="600" height="300"></canvas>
+
+<p id="warning"></p>
+
+<script>
+function simulate() {
+
+    let mu_max = 0.28;
+    let Topt = 20;
+    let delta = 10;
+    let Iopt = 200;
+    let carbon_ratio = 0.33;
+
+    let T = parseFloat(document.getElementById("temp").value);
+    let I = parseFloat(document.getElementById("light").value);
+    let biomass = parseFloat(document.getElementById("bio").value);
+
+    let fT = 1 - Math.pow((T - Topt),2) / Math.pow(delta,2);
+    if (fT < 0) fT = 0;
+
+    let fI = I / (I + Iopt);
+
+    let r = mu_max * fT * fI;
+
+    let days = 30;
+    let data = [];
+
+    for (let d=0; d<days; d++) {
+        biomass = biomass * (1 + r);
+        data.push(biomass);
+    }
+
+    let ctx = document.getElementById('chart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [...Array(days).keys()],
+            datasets: [{
+                label: 'Biyokütle (g)',
+                data: data
+            }]
         }
-        function update() {
-            const area = document.getElementById('area').value;
-            const carbon = (area * 1.25) / 1000;
-            document.getElementById('carbon-val').textContent = carbon.toFixed(2) + ' Ton';
-            document.getElementById('revenue-val').textContent = '€' + (carbon * 85).toLocaleString();
-        }
-        fetchCountries();
-    </script>
+    });
+
+    let co2 = biomass * carbon_ratio * 3.67;
+
+    let warningText = "";
+
+    if (T > 28) warningText += "⚠ Yüksek sıcaklık stresi riski.<br>";
+    if (I > 400) warningText += "⚠ Aşırı ışık alg patlaması riski.<br>";
+
+    warningText += "Tahmini CO₂ Yakalama: " + co2.toFixed(2) + " gram";
+
+    document.getElementById("warning").innerHTML = warningText;
+}
+</script>
+
 </body>
 </html>
