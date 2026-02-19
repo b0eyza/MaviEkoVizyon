@@ -12,7 +12,7 @@ st.markdown("""
     .block-container {padding: 0 !important;}
     iframe {border: none !important;}
     </style>
-    """, unsafe_allow_name_with_html=True)
+    """, unsafe_allow_html=True)
 
 with open("index.html", "r", encoding="utf-8") as f:
     html_code = f.read()
