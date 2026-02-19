@@ -41,7 +41,7 @@ biomass_list = []
 
 for temp in sst_data:
     temp_factor = np.exp(-((temp - optimal_temp) ** 2) / (2 * sigma ** 2))
-   growth = r * biomass * (1 - biomass / K) * temp_factor * nutrient
+    growth = r * biomass * (1 - biomass / K) * temp_factor * nutrient
     biomass += growth
     biomass_list.append(biomass)
 
