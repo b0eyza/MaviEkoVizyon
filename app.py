@@ -3,55 +3,52 @@ import requests
 import math
 import matplotlib.pyplot as plt
 
-st.title("Ulva lactuca Akıllı Büyüme Simülasyonu - Çanakkale")
+st.title("Ulva lactuca Gelişmiş Büyüme Tahmin Motoru - Çanakkale")
 
-# --- GERÇEK HAVA VERİSİ ---
-def get_weather():
+# --- 7 GÜNLÜK TAHMİN VERİSİ ---
+def get_weather_forecast():
     url = "https://api.open-meteo.com/v1/forecast?latitude=40.15&longitude=26.40&daily=temperature_2m_max,sunshine_duration&timezone=auto"
     response = requests.get(url)
     data = response.json()
 
-    temp = data["daily"]["temperature_2m_max"][0]
-    sun_hours = data["daily"]["sunshine_duration"][0] / 3600
+    temps = data["daily"]["temperature_2m_max"][:7]
+    sun_hours = [s / 3600 for s in data["daily"]["sunshine_duration"][:7]]
 
-    return temp, sun_hours
+    return temps, sun_hours
 
-temperature, sun_hours = get_weather()
+temps, sun_hours_list = get_weather_forecast()
 
-st.write("Bugünkü maksimum sıcaklık (°C):", temperature)
-st.write("Bugünkü güneşlenme süresi (saat):", round(sun_hours, 2))
-
-# --- KULLANICI GİRDİSİ ---
-initial_biomass = st.number_input("Başlangıç biyokütle (gram)", value=100)
+st.subheader("Önümüzdeki 7 Günlük Tahmin")
+for i in range(7):
+    st.write(f"Gün {i+1} - Sıcaklık: {temps[i]} °C | Güneş: {round(sun_hours_list[i],2)} saat")
 
 # --- MODEL PARAMETRELERİ ---
-r = 0.25   # maksimum büyüme oranı
-K = 1500   # taşıma kapasitesi
+initial_biomass = st.number_input("Başlangıç biyokütle (gram)", value=100)
+
+r = 0.30
+K = 1500
 opt_temp = 20
-sigma = 5  # sıcaklık tolerans aralığı
+sigma = 5
 
-# --- SICAKLIK FONKSİYONU (GAUSSIAN) ---
-temp_factor = math.exp(-((temperature - opt_temp) ** 2) / (2 * sigma ** 2))
-
-# --- IŞIK FAKTÖRÜ ---
-light_factor = min(1, sun_hours / 10)
-
-environment_factor = temp_factor * light_factor
-
-# --- 30 GÜNLÜK SİMÜLASYON ---
-days = 30
 biomass = initial_biomass
 biomass_list = []
-growth_rates = []
+growth_list = []
 
-for day in range(days):
+# --- 7 GÜNLÜK DİNAMİK SİMÜLASYON ---
+for day in range(7):
+
+    temp_factor = math.exp(-((temps[day] - opt_temp) ** 2) / (2 * sigma ** 2))
+    light_factor = min(1, sun_hours_list[day] / 10)
+    environment_factor = temp_factor * light_factor
+
     growth = r * biomass * (1 - biomass / K)
     biomass = biomass + growth * environment_factor
+
     biomass_list.append(biomass)
-    growth_rates.append(growth * environment_factor)
+    growth_list.append(growth * environment_factor)
 
 # --- GRAFİK ---
-st.subheader("30 Günlük Biyokütle Değişimi")
+st.subheader("7 Günlük Dinamik Büyüme")
 
 fig, ax = plt.subplots()
 ax.plot(biomass_list)
@@ -59,18 +56,15 @@ ax.set_xlabel("Gün")
 ax.set_ylabel("Biyokütle (gram)")
 st.pyplot(fig)
 
-st.subheader("30 Gün Sonraki Tahmini Biyokütle:")
+st.subheader("7 Gün Sonraki Tahmini Biyokütle:")
 st.write(round(biomass_list[-1], 2), "gram")
 
-# --- AKILLI UYARI SİSTEMİ ---
-if temperature > 28:
-    st.warning("Yüksek sıcaklık! Termal stres riski.")
+# --- AKILLI ALARM SİSTEMİ ---
+if max(growth_list) > 200:
+    st.warning("Ani büyüme tespit edildi! Alg patlaması riski.")
 
-if biomass_list[-1] > K * 0.8:
-    st.warning("Alg patlaması (bloom) riski artıyor!")
+if min(growth_list) < 0:
+    st.warning("Negatif büyüme! Çevresel stres olabilir.")
 
-if sum(growth_rates[-5:]) < 0:
-    st.warning("Son günlerde büyüme düşüşte. Stres faktörü olabilir.")
-
-if sun_hours < 4:
-    st.warning("Düşük ışık seviyesi büyümeyi baskılıyor.")
+if sum(growth_list) < 50:
+    st.warning("Genel büyüme düşük. Besin sınırlaması olabilir.")
